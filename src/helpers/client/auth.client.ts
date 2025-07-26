@@ -1,14 +1,9 @@
 import { RegisterFormData } from "@/components/Register";
 import { getErrorMessage } from "@/lib/getErrorMessage";
+import { HelperResponse } from "@/lib/HelperResponse";
 import { IUser } from "@/models/user.model";
 import axios from "axios";
 
-export type HelperResponse<T = unknown> = {
-  data: T | null;
-  error: {
-    message: string;
-  } | null;
-};
 
  async function registerUser(
   data: RegisterFormData

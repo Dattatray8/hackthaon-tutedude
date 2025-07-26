@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,9 +17,7 @@ import { Button } from "./ui/button";
 import { loginUser } from "@/helpers/client/auth.client";
 
 const formSchema = z.object({
-  phone: z
-    .string()
-    .regex(/^[0-9]{10}$/, "Phone number must be 10 digits."),
+  phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits."),
   password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
@@ -33,26 +31,31 @@ const LoginForm: React.FC = () => {
       password: "",
     },
   });
+  const [isLoading, startLoading] = useTransition();
 
-  const onSubmit = async(values: FormData) => {
+  const onSubmit = async (values: FormData) => {
     console.log("Form submitted:", values);
-    // Here you would typically call your login API
-    const {data, error} = await loginUser(values);
-    if (error) {
-      console.error("Login error:", error.message);
-      // Handle error (e.g., show a notification)
-      return;
-    }
-    console.log("Login successful:", data);
+    // Here you would typically call your login AP
+    startLoading(async () => {
+      const { data, error } = await loginUser(values);
+      if (error) {
+        console.error("Login error:", error.message);
+        // Handle error (e.g., show a notification)
+        return;
+      }
+
+      console.log("Login successful:", data);
+    });
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md p-6 bg-white rounded-2xl shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login Page</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          Login Page
+        </h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
             {/* Username Field (optional) */}
             {/* <FormField
               control={form.control}
@@ -103,8 +106,13 @@ const LoginForm: React.FC = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Submit
+            <Button
+              type="submit"
+              isLoading={isLoading}
+              fallbackText=""
+              className="w-full"
+            >
+              Login
             </Button>
           </form>
         </Form>
