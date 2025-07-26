@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { model, models, Schema } from "mongoose";
+import Supplier from "@/models/supplier.model";
 
 export interface IOffer {
   fromDate: Date;
@@ -16,10 +17,11 @@ export const OfferSchema = new Schema<IOffer>(
     notes: { type: String },
     supplier: {
       type: Schema.Types.ObjectId,
-      ref: "Supplier"
+      ref: Supplier.modelName
     }
   },
-  { _id: true } // keep _id for offers (optional)
+  { _id: true } 
 );
 
-// OfferSchema.find().populate("supplier")
+const Offer = models?.Offer || model<IOffer>("Offer", OfferSchema);
+export default Offer;

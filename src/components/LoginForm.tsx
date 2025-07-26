@@ -15,6 +15,7 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { loginUser } from "@/helpers/client/auth.client";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits."),
@@ -32,6 +33,7 @@ const LoginForm: React.FC = () => {
     },
   });
   const [isLoading, startLoading] = useTransition();
+  const router = useRouter()
 
   const onSubmit = async (values: FormData) => {
     console.log("Form submitted:", values);
@@ -45,6 +47,7 @@ const LoginForm: React.FC = () => {
       }
 
       console.log("Login successful:", data);
+      router.push("/dashboard")
     });
   };
 
