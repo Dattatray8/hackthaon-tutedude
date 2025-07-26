@@ -1,4 +1,4 @@
-import User, { IUser, userSchema } from "@/models/user.model";
+import User, { IUser } from "@/models/user.model";
 import { ApiError } from "@/utils/ApiError";
 import connectDB from "@/utils/dbConnection";
 import { handleError } from "@/utils/handleError";

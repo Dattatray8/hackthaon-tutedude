@@ -75,7 +75,8 @@ export default function SupplierForm() {
 
         setLoadingLocation(false);
       },
-      (error) => {
+      /*eslint-disable @typescript-eslint/no-unused-vars */
+      (_error) => {
         fallbackToIP();
       },
       {

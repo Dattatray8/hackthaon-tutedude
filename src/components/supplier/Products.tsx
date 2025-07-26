@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 
 type Product = {
@@ -62,7 +63,7 @@ export function ProductCRUD() {
           <label>Product Image</label>
           <input type="file" accept="image/*" onChange={handleImageChange} />
           {preview && (
-            <img src={preview} alt="Preview" className="mt-2 max-h-40 object-contain" />
+            <Image src={preview} alt="Preview" className="mt-2 max-h-40 object-contain" />
           )}
         </div>
         <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">Add Product</button>
@@ -73,7 +74,7 @@ export function ProductCRUD() {
       <ul>
         {products.map((p) => (
           <li key={p.id} className="border p-2 mb-2 rounded flex items-center gap-4">
-            <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded" />
+            <Image src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded" />
             <span>{p.name}</span>
           </li>
         ))}
