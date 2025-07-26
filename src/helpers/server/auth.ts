@@ -2,11 +2,11 @@ import User, { IUser } from "@/models/user.model";
 import { ApiError } from "@/utils/ApiError";
 import connectDB from "@/utils/dbConnection";
 
+
 export async function registerUser(userData: IUser) {
   // Check if user exists
   const orConditions: Array<Record<string, string>> = [
     { phone: userData.phone },
-    { username: userData.username },
   ];
   console.log("userData.email", userData.email);
   if (userData.email) {
@@ -18,13 +18,12 @@ export async function registerUser(userData: IUser) {
     const credential =
       existingUser?.email && existingUser.email === userData.email
         ? "Email"
-        : "Phone/Username";
+        : "Phone";
     throw new ApiError(`User with ${credential} already registered`, 409);
   }
 
   const newUser: IUser = {
     username: userData.username,
-    fullName: userData.fullName,
     phone: userData.phone,
     password: userData.password,
     role: userData.role,
@@ -36,5 +35,6 @@ export async function registerUser(userData: IUser) {
   if (!createdUser) {
     throw new ApiError("Failed to register user", 500);
   }
+  console.log("User registered successfully", createdUser);
   return createdUser;
 }

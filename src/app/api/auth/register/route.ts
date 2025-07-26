@@ -4,8 +4,13 @@ import { asyncHandler } from "@/utils/asyncHandler";
 
 const registerUserRoute = asyncHandler(async(req)=>{
     const data =await req.json();
+    console.log('data', data)
     const user = await registerUser(data);
-    return ApiResponse.success("User registered Successfully", {user}, 200)
+    if (!user) {
+        return ApiResponse.error("User registration failed", 400);
+    }
+    console.log('user', user)
+    return ApiResponse.success("User registered Successfully", { user }, 200)
 })
 
 
