@@ -1,39 +1,75 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+"use client";
+// ...existing imports...
 import { useRouter } from 'next/navigation';
-import { getSession } from 'next-auth/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import axios from 'axios';
+import { IUser, UserRole } from '@/models/user.model';
+import { useEffect, useState } from 'react';
+
+const dummyFeed = [
+  {
+    _id: "1",
+    title: "Bulk Rice Offer",
+    category: "Food Grains",
+    description: "High quality rice available at discounted rates.",
+    supplierName: "Sharma Agro",
+    vendorName: "FreshMart",
+  },
+  {
+    _id: "2",
+    title: "Request for 1000kg Sugar",
+    category: "Groceries",
+    description: "Looking for bulk sugar suppliers for retail chain.",
+    supplierName: "SweetSupplies",
+    vendorName: "BigBazaar",
+  },
+  {
+    _id: "3",
+    title: "Vegetable Supply Needed",
+    category: "Vegetables",
+    description: "Daily supply of fresh vegetables required.",
+    supplierName: "GreenFarms",
+    vendorName: "VeggieMart",
+  },
+];
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(null);
-  const [feed, setFeed] = useState([]);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [feed, setFeed] = useState(dummyFeed); // Use dummy data initially
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const session = await getSession();
-      if (!session) return router.push('/login');
-
-      const userRes = await axios.get('/api/me');
-      setUser(userRes.data);
-
-      const feedRes = await axios.get('/api/feed');
-      setFeed(feedRes.data);
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('/api/users');
+        setUser(response.data.user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
     };
 
-    fetchData();
-  }, [router]);
+    // Uncomment below to fetch real feed data
+    // const fetchFeed = async () => {
+    //   try {
+    //     const response = await axios.get('/api/feed');
+    //     setFeed(response.data);
+    //   } catch (error) {
+    //     console.error('Error fetching feed:', error);
+    //   }
+    // };
+
+    fetchUser();
+    // fetchFeed();
+  }, []);
 
   if (!user) return <div className="p-8">Loading...</div>;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">
-        {user.role === 'Vendor' ? 'Supplier Offers Feed' : 'Vendor Requests Feed'}
+        {user.role === UserRole.vendor ? 'Supplier Offers Feed' : 'Vendor Requests Feed'}
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -45,10 +81,10 @@ export default function DashboardPage() {
                 <Badge variant="outline">{item.category}</Badge>
               </div>
               <p className="text-gray-700 mb-2">{item.description}</p>
-              {user.role === 'Vendor' && (
+              {user.role === UserRole.vendor && (
                 <p className="text-sm text-gray-500">From: {item.supplierName}</p>
               )}
-              {user.role === 'Supplier' && (
+              {user.role === UserRole.supplier && (
                 <p className="text-sm text-gray-500">Requested by: {item.vendorName}</p>
               )}
               <Button className="mt-4">View Details</Button>
