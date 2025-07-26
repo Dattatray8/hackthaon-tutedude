@@ -37,7 +37,7 @@ const dummyFeed = [
 
 export default function DashboardPage() {
   const [user, setUser] = useState<IUser | null>(null);
-  const [feed, setFeed] = useState(dummyFeed); // Use dummy data initially
+  const [feed, _setFeed] = useState(dummyFeed); // Use dummy data initially
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +47,7 @@ export default function DashboardPage() {
         setUser(response.data.user);
       } catch (error) {
         console.error('Error fetching user:', error);
+        router.push('/login'); // Redirect to login if user not found
       }
     };
 
@@ -62,7 +63,7 @@ export default function DashboardPage() {
 
     fetchUser();
     // fetchFeed();
-  }, []);
+  }, [router]);
 
   if (!user) return <div className="p-8">Loading...</div>;
 
