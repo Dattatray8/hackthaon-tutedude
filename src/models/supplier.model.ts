@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema } from "mongoose";
+import mongoose, { model, models, Schema, Types } from "mongoose";
 
 type IProduct = {
   name: string;
@@ -17,6 +17,7 @@ type ISupplier = {
   address: string;
   category: string;
   products: IProduct[];
+  user: mongoose.Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -80,6 +81,11 @@ const SupplierSchema = new Schema<ISupplier>(
       type: [ProductSchema],
       default: [],
       required: false,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
