@@ -17,7 +17,7 @@ type IUser = {
   updatedAt?: Date;
 }
 
-const userSchema = new Schema<IUser>(
+export const userSchema = new Schema<IUser>(
   {
     username: {
       type: String,

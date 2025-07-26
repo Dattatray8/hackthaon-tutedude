@@ -15,6 +15,7 @@ type ISupplier = {
   shopName: string;
   shopLocation: IGeoLocation;
   address: string;
+  category: string;
   products: IProduct[];
   createdAt?: Date;
   updatedAt?: Date;
@@ -71,10 +72,14 @@ const SupplierSchema = new Schema<ISupplier>(
       required: [true, "Address is required"],
       maxlength: 15,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     products: {
       type: [ProductSchema],
       default: [],
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
