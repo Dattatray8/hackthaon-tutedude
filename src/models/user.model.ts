@@ -1,7 +1,7 @@
 import mongoose, { model, models, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { SignJWT } from "jose";
-enum UserRole {
+export enum UserRole {
   supplier = "supplier",
   vendor = "vendor",
 }
@@ -62,6 +62,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.isPasswordCorrect = async function (
   password: string
 ): Promise<boolean> {
+  console.log('password', password,this.password);
   return await bcrypt.compare(password, this.password);
 };
 

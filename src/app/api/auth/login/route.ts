@@ -1,32 +1,31 @@
-import User, { userSchema } from "@/models/user.model";
-import { ApiError } from "@/utils/ApiError";
+import { loginUser } from "@/helpers/server/auth";
 import { ApiResponse } from "@/utils/ApiResponse";
 import { asyncHandler } from "@/utils/asyncHandler";
-import connectDB from "@/utils/dbConnection";
 
-async function loginUser(phone:string,password:string){
-  await connectDB()
-  const isUser = await User.findOne({phone})
-  if(!isUser){
-    throw new ApiError("user not exists",400)
-  }
-  let correctUser = await userSchema.methods.isPasswordCorrect(password)
-  if(!correctUser){
-    throw new ApiError("incorrect password",400)
-  }
-  return ApiResponse.success("User login successfully",{correctUser},200)
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict' as const,
 }
-
 const loginUserRoute = asyncHandler(async(req)=>{
     const data =await req.json();
     console.log('data', data);
 
-    const user = await loginUser(data.phone,data.password)
+    const {user, accessToken, refreshToken} = await loginUser(data.phone,data.password)
     if (!user) {
-        return ApiResponse.error("User registration failed", 400);
+        return ApiResponse.error("User registration failed", 500);
     }
-    console.log('user', user)
-    return ApiResponse.success("User registered Successfully", { user }, 200)
+    const response = ApiResponse.success("User logged in Successfully", { user }, 200)
+    response.cookies.set("accessToken", accessToken, {
+        ...cookieOptions,
+        maxAge: 60 * 60 * 24, // 1 day
+    });
+    response.cookies.set("refreshToken", refreshToken, {
+        ...cookieOptions,
+        maxAge: 60 * 60 * 24 * 30, //7 days
+    });
+    return response; 
 })
 
 

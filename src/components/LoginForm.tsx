@@ -14,16 +14,13 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { loginUser } from "@/helpers/client/auth.client";
 
 const formSchema = z.object({
-  userName: z.string().min(2, "Username must be at least 2 characters."),
-  phoneNumber: z
+  phone: z
     .string()
     .regex(/^[0-9]{10}$/, "Phone number must be 10 digits."),
   password: z.string().min(6, "Password must be at least 6 characters."),
-  role: z.enum(["Vendor", "Supplier"], {
-    errorMap: () => ({ message: "Please select a role." }),
-  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -32,15 +29,21 @@ const LoginForm: React.FC = () => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userName: "",
-      phoneNumber: "",
+      phone: "",
       password: "",
-      role: undefined,
     },
   });
 
-  const onSubmit = (values: FormData) => {
+  const onSubmit = async(values: FormData) => {
     console.log("Form submitted:", values);
+    // Here you would typically call your login API
+    const {data, error} = await loginUser(values);
+    if (error) {
+      console.error("Login error:", error.message);
+      // Handle error (e.g., show a notification)
+      return;
+    }
+    console.log("Login successful:", data);
   };
 
   return (
@@ -67,7 +70,7 @@ const LoginForm: React.FC = () => {
 
             <FormField
               control={form.control}
-              name="phoneNumber"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -100,30 +103,6 @@ const LoginForm: React.FC = () => {
                 </FormItem>
               )}
             />
-
-            {/* Role Field (optional) */}
-            {/* <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Vendor">Vendor</SelectItem>
-                      <SelectItem value="Supplier">Supplier</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-
             <Button type="submit" className="w-full">
               Submit
             </Button>
