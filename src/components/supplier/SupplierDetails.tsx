@@ -101,7 +101,7 @@ export function SupplierForm() {
         </Button>
       </div>
 
-      <Button type="submit" className="w-full">Save Supplier</Button>
+      <Button type="submit" className="w-full">Update Profile</Button>
     </form>
   );
 }

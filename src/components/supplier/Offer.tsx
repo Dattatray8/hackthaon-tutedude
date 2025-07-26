@@ -1,6 +1,18 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type Offer = {
   id: number;
@@ -10,77 +22,118 @@ type Offer = {
   notes: string;
 };
 
+type OfferForm = {
+  fromDate: string;
+  toDate: string;
+  offerOn: string;
+  notes?: string;
+};
+
 export function OfferCRUD() {
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [form, setForm] = useState({
-    fromDate: "",
-    toDate: "",
-    offerOn: "",
-    notes: "",
+  const form = useForm<OfferForm>({
+    defaultValues: {
+      fromDate: "",
+      toDate: "",
+      offerOn: "",
+      notes: "",
+    },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.fromDate || !form.toDate || !form.offerOn) {
-      alert("Please fill From Date, To Date, and Offer On");
-      return;
-    }
-    setOffers([...offers, { ...form, id: Date.now() }]);
-    setForm({ fromDate: "", toDate: "", offerOn: "", notes: "" });
-  };
-
   return (
-    <div className="max-w-md mx-auto p-4 border rounded space-y-4">
-      <h2 className="text-xl font-semibold">Create Offer</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div>
-          <label>From Date</label>
-          <input type="date" name="fromDate" value={form.fromDate} onChange={handleChange} className="w-full border p-1" />
-        </div>
-        <div>
-          <label>To Date</label>
-          <input type="date" name="toDate" value={form.toDate} onChange={handleChange} className="w-full border p-1" />
-        </div>
-        <div>
-          <label>Offer On</label>
-          <input
-            type="text"
-            name="offerOn"
-            placeholder="Product or Category"
-            value={form.offerOn}
-            onChange={handleChange}
-            className="w-full border p-1"
-          />
-        </div>
-        <div>
-          <label>Notes</label>
-          <textarea
-            name="notes"
-            placeholder="Any additional notes"
-            value={form.notes}
-            onChange={handleChange}
-            className="w-full border p-1"
-          />
-        </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Add Offer</button>
-      </form>
+    <div className="max-w-md mx-auto p-6 border rounded-md space-y-6 bg-white">
+      <h2 className="text-2xl font-semibold">Create Offer</h2>
 
-      <h3 className="mt-6 font-semibold">Offers List</h3>
-      {offers.length === 0 && <p>No offers created yet.</p>}
-      <ul>
-        {offers.map((offer) => (
-          <li key={offer.id} className="border p-2 mb-2 rounded">
-            <p><b>From:</b> {offer.fromDate}</p>
-            <p><b>To:</b> {offer.toDate}</p>
-            <p><b>Offer On:</b> {offer.offerOn}</p>
-            <p><b>Notes:</b> {offer.notes || "None"}</p>
-          </li>
-        ))}
-      </ul>
+      <Form {...form}>
+        <form className="space-y-4">
+          <FormField
+            control={form.control}
+            name="fromDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>From Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="toDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>To Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="offerOn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Offer On</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Product or Category" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notes</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Any additional notes" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="w-full">
+            Add Offer
+          </Button>
+        </form>
+      </Form>
+
+      <h3 className="text-xl font-semibold mt-6">Offers List</h3>
+      {offers.length === 0 ? (
+        <p className="text-muted-foreground">No offers created yet.</p>
+      ) : (
+        <ul className="space-y-3">
+          {offers.map((offer) => (
+            <li
+              key={offer.id}
+              className="border rounded-md p-4 bg-gray-50 dark:bg-gray-800"
+            >
+              <p>
+                <strong>From:</strong> {offer.fromDate}
+              </p>
+              <p>
+                <strong>To:</strong> {offer.toDate}
+              </p>
+              <p>
+                <strong>Offer On:</strong> {offer.offerOn}
+              </p>
+              <p>
+                <strong>Notes:</strong> {offer.notes || "None"}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
