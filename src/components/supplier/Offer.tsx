@@ -39,13 +39,18 @@ export function OfferCRUD() {
       notes: "",
     },
   });
+  const onSubmit = async (data: unknown) => {
+    console.log('data', data)
+  }
 
   return (
     <div className="max-w-md mx-auto p-6 border rounded-md space-y-6 bg-white">
       <h2 className="text-2xl font-semibold">Create Offer</h2>
 
       <Form {...form}>
-        <form className="space-y-4">
+        <form className="space-y-4"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <FormField
             control={form.control}
             name="fromDate"
