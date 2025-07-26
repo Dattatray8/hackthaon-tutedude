@@ -1,3 +1,4 @@
+import BottomNav from '@/components/BottomNav'
 import Register from '@/components/Register'
 import React from 'react'
 
