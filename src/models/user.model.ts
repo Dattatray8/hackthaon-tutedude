@@ -5,10 +5,10 @@ enum UserRole {
   supplier = "supplier",
   vendor = "vendor",
 }
+
 type IUser = {
   _id?: mongoose.Types.ObjectId;
   username: string;
-  fullName: string;
   phone: string;
   email?: string;
   password: string;
@@ -35,6 +35,11 @@ const userSchema = new Schema<IUser>(
       required: [true, "Phone number is required"],
       unique: [true, "Phone number already registered"],
       maxlength: 15,
+    },
+    role:{
+      type:String,
+      enum: Object.values(UserRole),
+      required:true,
     },
     password: {
       type: String,
