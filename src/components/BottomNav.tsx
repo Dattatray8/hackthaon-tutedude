@@ -3,8 +3,13 @@
 import { Home, User, ShoppingCart, Settings } from "lucide-react";
 import React from "react";
 import Link from "next/link"; // or use react-router-dom if you're not using Next.js
+import { usePathname } from "next/navigation";
 
 const BottomNav: React.FC = () => {
+  const pathname = usePathname();
+  if(pathname.startsWith("/login") || pathname.startsWith("/register")) {
+    return null; // Hide the bottom nav on login and register pages
+  }   
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-md md:hidden">
       <ul className="flex justify-between items-center px-6 py-2">
