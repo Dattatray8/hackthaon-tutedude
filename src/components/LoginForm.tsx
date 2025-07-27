@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { getCurrentUser, loginUser } from "@/helpers/client/auth.client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   phone: z.string().regex(/^[0-9]{10}$/, "Phone number must be 10 digits."),
@@ -41,11 +42,12 @@ const LoginForm: React.FC = () => {
     startLoading(async () => {
       const { data, error } = await loginUser(values);
       if (error) {
-        console.error("Login error:", error.message);
+        toast.error("Login error:" + error.message);
         // Handle error (e.g., show a notification)
         return;
       }
       getCurrentUser()
+      toast.success("Login successfull")
       console.log("Login successful:", data);
       router.push("/dashboard")
     });

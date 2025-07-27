@@ -24,6 +24,7 @@ import {
 import { UserRole } from "@/models/user.model";
 import { getCurrentUser, registerUser } from "@/helpers/client/auth.client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // ✅ Zod Schema for validation
 export const registerSchema = z.object({
@@ -59,13 +60,13 @@ const Register: React.FC = () => {
 
     if (error) {
       // Show error message to user (replace with your toast/snackbar if needed)
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
     getCurrentUser();
     if (user) {
       // Registration successful, handle navigation or show success message
-      alert("Registration successful!");
+      toast.success("Registration successful!");
       // Example: redirect to login page
       router.push("/login");
     }

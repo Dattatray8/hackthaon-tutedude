@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getCurrentUser, logoutUser } from "@/helpers/client/auth.client";
 import { IUser } from "@/models/user.model";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function NavItem({ label, href }: { label: string, href:string }) {
   const navigation = useRouter()
@@ -101,9 +102,13 @@ export default function ClientNavbar() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await getCurrentUser();
-      setRole(res.data?.user?.role || "");
+      const {data, error} = await getCurrentUser();
+      if(error){
+        toast.error(error.message)
+      }
+      setRole(data?.role || "");
     };
+
     fetchUser();
   }, []);
 

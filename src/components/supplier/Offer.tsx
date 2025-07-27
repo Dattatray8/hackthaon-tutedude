@@ -3,17 +3,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Tag, Calendar, FileText } from "lucide-react";
 
 type Offer = {
   _id: string;
@@ -52,7 +47,6 @@ export function OfferCRUD() {
     }
   };
 
-
   useEffect(() => {
     fetchOffers();
   }, []);
@@ -60,11 +54,10 @@ export function OfferCRUD() {
   const onSubmit = async (data: OfferForm) => {
     try {
       const response = await axios.get("/api/users");
-      const res = await axios.post("/api/supplier/createoffer", {
+      await axios.post("/api/supplier/createoffer", {
         ...data,
         supplier: response?.data?.user?._id,
       });
-      console.log("Offer created:", res.data);
       fetchOffers();
       form.reset();
     } catch (err) {
@@ -83,99 +76,99 @@ export function OfferCRUD() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 border rounded-md space-y-6 bg-white">
-      <h2 className="text-2xl font-semibold">Create Offer</h2>
+    <div className="space-y-6">
+      {/* Create Offer Form */}
+      <Card className="shadow-lg border rounded-2xl p-6">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            🏷️ Create Offer
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="fromDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>From Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="fromDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>From Date</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="toDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>To Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="toDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>To Date</FormLabel>
-                <FormControl>
-                  <Input type="date" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="offerOn"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Offer On</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Product or Category" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="offerOn"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Offer On</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="Product or Category" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Any additional notes" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="notes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Any additional notes" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <Button type="submit" className="w-full">➕ Add Offer</Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
 
-          <Button type="submit" className="w-full">
-            Add Offer
-          </Button>
-        </form>
-      </Form>
-
-      <h3 className="text-xl font-semibold mt-6">Offers List</h3>
+      {/* Offers List */}
+      <h3 className="text-lg font-semibold">📋 Offers List</h3>
       {offers.length === 0 ? (
-        <p className="text-muted-foreground">No offers created yet.</p>
+        <p className="text-gray-500">No offers created yet.</p>
       ) : (
-        <ul className="space-y-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {offers.map((offer) => (
-            <li
-              key={offer._id}
-              className="border rounded-md p-4 bg-gray-50 flex justify-between items-start"
-            >
-              <div>
-                <p><strong>From:</strong> {offer.fromDate}</p>
-                <p><strong>To:</strong> {offer.toDate}</p>
-                <p><strong>Offer On:</strong> {offer.offerOn}</p>
-                <p><strong>Description:</strong> {offer.notes || "None"}</p>
+            <Card key={offer._id} className="shadow-md border rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white hover:shadow-xl transition">
+              <div className="space-y-2">
+                <p className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4 text-blue-600" /> <strong>From:</strong> {offer.fromDate}</p>
+                <p className="flex items-center gap-2 text-sm"><Calendar className="w-4 h-4 text-blue-600" /> <strong>To:</strong> {offer.toDate}</p>
+                <p className="flex items-center gap-2 text-sm"><Tag className="w-4 h-4 text-purple-600" /> <strong>Offer On:</strong> {offer.offerOn}</p>
+                <p className="flex items-center gap-2 text-sm"><FileText className="w-4 h-4 text-gray-600" /> <strong>Notes:</strong> {offer.notes || "None"}</p>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteOffer(offer._id)}
-              >
-                Delete
+              <Button variant="destructive" size="sm" className="mt-3 w-full" onClick={() => deleteOffer(offer._id)}>
+                🗑️ Delete
               </Button>
-            </li>
+            </Card>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

@@ -55,7 +55,7 @@ const UploadFile = ({ setFileUrl, folder = "/tutedude" }: UploadFileProps) => {
       console.log("Upload successful:", response);
       toast.success("Upload successful", { id: "upload-toast" });
       setFileUrl(response.url || null);
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Upload failed", { id: "upload-toast" });
       console.error("Upload error:", err);
       setFileUrl(null);

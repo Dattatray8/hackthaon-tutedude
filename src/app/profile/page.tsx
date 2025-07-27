@@ -23,6 +23,8 @@ import {
   MapPin,
   Building
 } from "lucide-react";
+import { IUser } from "@/models/user.model";
+import { toast } from "sonner";
 
 interface User {
   _id: string;
@@ -39,7 +41,7 @@ interface Supplier {
 }
 
 export default function Page() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
   const [userId, setUserId] = useState("");
   const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [editMode, setEditMode] = useState(false);
@@ -49,9 +51,13 @@ export default function Page() {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const res = await getCurrentUser();
-        const userData = res.data?.user;
-        const id = userData?._id;
+        const {data, error} = await getCurrentUser();
+        if(error){
+            toast.error(error.message);
+            return;
+        }
+        const userData = data;
+        const id = String(userData?._id);
         
         setUser(userData || null);
         setUserId(id);
@@ -87,7 +93,6 @@ export default function Page() {
   }
 
   const isVendor = user?.role === "vendor";
-  const isSupplier = user?.role === "supplier";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -108,7 +113,7 @@ export default function Page() {
                   {isVendor ? "Vendor Dashboard" : "Supplier Dashboard"}
                 </h1>
                 <p className="text-slate-600">
-                  Welcome back, {user?.name || "User"}
+                  Welcome back, {user?.username || "User"}
                 </p>
               </div>
             </div>
@@ -185,7 +190,6 @@ function SupplierDashboard({
   userId, 
   editMode, 
   setEditMode, 
-  setSupplier 
 }: {
   supplier: Supplier | null;
   userId: string;
@@ -197,7 +201,7 @@ function SupplierDashboard({
   if (!supplier && !editMode) {
     return (
       <div className="space-y-8">
-        <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm border-dashed border-2 border-blue-300">
+        <Card className="shadow-lg  bg-white/70 backdrop-blur-sm border-dashed border-2 border-blue-300">
           <CardContent className="py-12">
             <div className="text-center space-y-6">
               <div className="h-16 w-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto">
