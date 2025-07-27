@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import UploadFile from "../imagekit/UploadFile";
 
 type Product = {
   id: number;
@@ -14,24 +15,16 @@ type Product = {
 export function ProductCRUD() {
   const [products, setProducts] = useState<Product[]>([]);
   const [productName, setProductName] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string>("");
+  const [preview, setPreview] = useState<string | null>(null);
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setProductName(e.target.value);
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
-      setPreview(URL.createObjectURL(e.target.files[0]));
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!productName || !imageFile) {
-      alert("Please enter product name and select an image.");
+    if (!productName || !preview) {
+      alert("Please enter product name and upload an image.");
       return;
     }
 
@@ -43,8 +36,7 @@ export function ProductCRUD() {
 
     setProducts([...products, newProduct]);
     setProductName("");
-    setImageFile(null);
-    setPreview("");
+    setPreview(null);
   };
 
   return (
@@ -67,16 +59,7 @@ export function ProductCRUD() {
         </div>
 
         <div>
-          <label htmlFor="productImage" className="block mb-1 font-medium">
-            Product Image
-          </label>
-          <input
-            id="productImage"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="block"
-          />
+          <UploadFile setFileUrl={(url) => setPreview(url)} />
           {preview && (
             <div className="mt-3 max-h-40 w-full relative">
               <Image
