@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import {
   Form,
   FormControl,
@@ -15,11 +16,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 type Offer = {
-  id: number;
+  _id: string;
   fromDate: string;
   toDate: string;
   offerOn: string;
-  notes: string;
+  notes?: string;
+  supplier?: any;
 };
 
 type OfferForm = {
@@ -27,6 +29,7 @@ type OfferForm = {
   toDate: string;
   offerOn: string;
   notes?: string;
+  supplier?: string;
 };
 
 export function OfferCRUD() {
@@ -39,18 +42,52 @@ export function OfferCRUD() {
       notes: "",
     },
   });
-  const onSubmit = async (data: unknown) => {
-    console.log('data', data)
-  }
+
+  const fetchOffers = async () => {
+    try {
+      const res = await axios.get("/api/supplier/getoffers");
+      setOffers(res.data.data.offers || []);
+    } catch (err) {
+      console.error("Failed to fetch offers", err);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const onSubmit = async (data: OfferForm) => {
+    try {
+      const response = await axios.get("/api/users");
+      const res = await axios.post("/api/supplier/createoffer", {
+        ...data,
+        supplier: response?.data?.user?._id,
+      });
+      console.log("Offer created:", res.data);
+      fetchOffers();
+      form.reset();
+    } catch (err) {
+      console.error("Error creating offer", err);
+    }
+  };
+
+  const deleteOffer = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this offer?")) return;
+    try {
+      await axios.delete(`/api/supplier/deleteoffer/?id=${id}`);
+      setOffers((prev) => prev.filter((offer) => offer._id !== id));
+    } catch (err) {
+      console.error("Error deleting offer", err);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto p-6 border rounded-md space-y-6 bg-white">
       <h2 className="text-2xl font-semibold">Create Offer</h2>
 
       <Form {...form}>
-        <form className="space-y-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="fromDate"
@@ -98,7 +135,7 @@ export function OfferCRUD() {
             name="notes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Notes</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Any additional notes" {...field} />
                 </FormControl>
@@ -120,21 +157,22 @@ export function OfferCRUD() {
         <ul className="space-y-3">
           {offers.map((offer) => (
             <li
-              key={offer.id}
-              className="border rounded-md p-4 bg-gray-50 dark:bg-gray-800"
+              key={offer._id}
+              className="border rounded-md p-4 bg-gray-50 flex justify-between items-start"
             >
-              <p>
-                <strong>From:</strong> {offer.fromDate}
-              </p>
-              <p>
-                <strong>To:</strong> {offer.toDate}
-              </p>
-              <p>
-                <strong>Offer On:</strong> {offer.offerOn}
-              </p>
-              <p>
-                <strong>Notes:</strong> {offer.notes || "None"}
-              </p>
+              <div>
+                <p><strong>From:</strong> {offer.fromDate}</p>
+                <p><strong>To:</strong> {offer.toDate}</p>
+                <p><strong>Offer On:</strong> {offer.offerOn}</p>
+                <p><strong>Description:</strong> {offer.notes || "None"}</p>
+              </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => deleteOffer(offer._id)}
+              >
+                Delete
+              </Button>
             </li>
           ))}
         </ul>

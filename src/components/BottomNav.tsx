@@ -38,10 +38,20 @@ export function BottomNavVendor() {
 }
 
 export function BottomNavSupplier() {
+  const [user, setUser] = useState<IUser | null>(null);
+  const navigation = useRouter()
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md flex justify-around py-2 md:hidden">
       <BottomNavItem label="Profile" href="/profile" icon={<User className="h-5 w-5" />} />
-      <Button variant="destructive" size="sm">Logout</Button>
+      <Button variant="destructive" size="sm" onClick={async()=>{
+        let res = await logoutUser()
+        console.log(res)
+        setUser(null)
+        if(!user){
+          navigation.push('/dashboard')
+        }
+      }}>Logout</Button>
     </nav>
   );
 }
