@@ -48,14 +48,6 @@ export default function Page() {
                 <p><strong>Offer On:</strong> {offer.offerOn}</p>
                 <p><strong>Description:</strong> {offer.notes || "None"}</p>
               </div>
-
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => deleteOffer(offer._id)}
-              >
-                Delete
-              </Button>
             </li>
           ))}
         </ul>

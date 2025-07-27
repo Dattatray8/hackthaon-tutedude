@@ -1,18 +1,14 @@
 import connectDB from "@/utils/dbConnection";
 import User from "@/models/user.model";
 import { ApiResponse } from "@/utils/ApiResponse";
+import { asyncHandler } from "@/utils/asyncHandler";
 
-const handler = async() => {
-    await connectDB();
-    try {
-        const suppliers = await User.find({ role: "supplier" }).select("-password"); // exclude password
+const handler = asyncHandler(async () => {
+  await connectDB();
 
-       return ApiResponse.success("Suppliers fetched successfully", { suppliers }, 200);
+  const suppliers = await User.find({ role: "supplier" }).select("-password");
 
-    } catch (error: any) {
-    return ApiResponse.error(`Server error: ${error.message}`, 500);
+  return ApiResponse.success("Suppliers fetched successfully", { suppliers }, 200);
+});
 
-    }
-}
-
-export {handler as GET}
+export { handler as GET };

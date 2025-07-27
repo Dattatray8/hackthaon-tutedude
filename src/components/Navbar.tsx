@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/helpers/client/auth.client";
+import { getCurrentUser, logoutUser } from "@/helpers/client/auth.client";
+import { IUser } from "@/models/user.model";
+import { useRouter } from "next/navigation";
 
 function NavItem({ label }: { label: string }) {
   return (
@@ -16,6 +18,8 @@ function NavItem({ label }: { label: string }) {
 
 // ✅ Navbar for Vendor
 export function NavbarType1() {
+  const [user, setUser] = useState<IUser | null>(null);
+  const navigation = useRouter()
   return (
     <nav className="hidden md:flex justify-between items-center px-6 py-3 border-b bg-background">
       <div className="flex items-center space-x-3">
@@ -32,13 +36,22 @@ export function NavbarType1() {
         <NavItem label="Suppliers" />
       </div>
 
-      <Button variant="destructive">Logout</Button>
+      <Button variant="destructive" onClick={async () => {
+        let res = await logoutUser()
+        console.log(res)
+        setUser(null)
+        if (!user) {
+          navigation.push('/dashboard')
+        }
+      }}>Logout</Button>
     </nav>
   );
 }
 
 // ✅ Navbar for Supplier
 export function NavbarType2() {
+  const [user, setUser] = useState<IUser | null>(null);
+  const navigation = useRouter()
   return (
     <nav className="hidden md:flex justify-between items-center px-6 py-3 border-b bg-background">
       <div className="flex items-center space-x-3">
@@ -51,14 +64,21 @@ export function NavbarType2() {
 
       <div className="flex items-center space-x-4">
         <NavItem label="Profile" />
-        <Button variant="destructive">Logout</Button>
+        <Button variant="destructive" onClick={async () => {
+          const res = await logoutUser()
+          console.log(res)
+          setUser(null)
+          if (!user) {
+            navigation.push('/dashboard')
+          }
+        }}>Logout</Button>
       </div>
     </nav>
   );
 }
 
-// ✅ Navbar for Guests
 export function NavbarType3() {
+  const navigation = useRouter()
   return (
     <nav className="hidden md:flex justify-between items-center px-6 py-3 border-b bg-background">
       <div className="flex items-center space-x-3">
@@ -69,7 +89,9 @@ export function NavbarType3() {
         </Avatar> */}
       </div>
 
-      <Button>Login</Button>
+      <Button onClick={()=>{
+        navigation.push('/login')
+      }}>Login</Button>
     </nav>
   );
 }

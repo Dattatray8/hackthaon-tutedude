@@ -1,5 +1,4 @@
 import mongoose, { model, models, Schema } from "mongoose";
-import Supplier from "@/models/supplier.model";
 
 export interface IOffer {
   fromDate: Date;
@@ -17,7 +16,8 @@ export const OfferSchema = new Schema<IOffer>(
     notes: { type: String },
     supplier: {
       type: Schema.Types.ObjectId,
-      ref: Supplier.modelName
+      ref: "Supplier",
+      required:true
     }
   },
   { _id: true } 

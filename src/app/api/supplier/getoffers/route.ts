@@ -1,23 +1,14 @@
 import connectDB from "@/utils/dbConnection";
-import Offer from "@/models/offers.model"
-import { ApiResponse } from '@/utils/ApiResponse';
-import Supplier from "@/models/supplier.model";
+import Offer from "@/models/offers.model";
+import { ApiResponse } from "@/utils/ApiResponse";
+import { asyncHandler } from "@/utils/asyncHandler";
 
-type Data =
-  | { offers: any[] }
-  | { message: string; error?: string };
+const handler = asyncHandler(async () => {
+  await connectDB();
 
+  const offers = await Offer.find().populate("supplier");
 
+  return ApiResponse.success("All offers fetched successfully", { offers }, 200);
+});
 
-const handler = async() => {
-    await connectDB();
-    try {
-    const offers = await Offer.find().populate('supplier');
-    console.log(offers)
-      return ApiResponse.success("All offers: ",{offers},200)
-    } catch (error: any) {
-        return ApiResponse.error(`Server error : ${error.message}`,500)
-    }
-}
-
-export {handler as GET}
+export { handler as GET };

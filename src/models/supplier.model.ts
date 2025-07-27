@@ -1,4 +1,4 @@
-import mongoose, { model, models, Schema, Types } from "mongoose";
+import mongoose, { model, models, Schema } from "mongoose";
 
 type IProduct = {
   name: string;

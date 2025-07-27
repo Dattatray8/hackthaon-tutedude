@@ -82,7 +82,7 @@ export default function ClientBottomNav() {
     return null;
   }
 
-  if (role === "vendor") return <BottomNavVendor />;
+  if (role === "vendor") return <BottomNavVendor />;`x`
   if (role === "supplier") return <BottomNavSupplier />;
   return <BottomNavGuest />;
 }

@@ -1,10 +1,12 @@
 import connectDB from "@/utils/dbConnection";
 import Offer from "@/models/offers.model"
 import { ApiResponse } from '@/utils/ApiResponse';
+import { NextRequest } from "next/server";
+import { asyncHandler } from "@/utils/asyncHandler";
 
-const handler = async(req:any) => {
+const handler = asyncHandler(async(req:NextRequest) => {
   await connectDB();
-    try {
+
       const data = await req.json();
 
       if (!data.fromDate || !data.toDate || !data.offerOn || !data.supplier) {
@@ -20,9 +22,7 @@ const handler = async(req:any) => {
       });
 
       return ApiResponse.success("offer created",{newOffer},201)
-    } catch (error: any) {
-      return ApiResponse.error(`Server error : ${error.message}`,500);
-    }
-}
+   
+})
 
 export {handler as POST}

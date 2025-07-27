@@ -1,11 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import axios from "axios";
-import { IUser, UserRole } from "@/models/user.model";
+import { IUser} from "@/models/user.model";
 import { useEffect, useState } from "react";
 
 const dummyFeed = [
