@@ -2,10 +2,18 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+
+type Offer = {
+  _id: string;
+  fromDate: string;
+  toDate: string;
+  offerOn: string;
+  notes?: string;
+  supplier?: object;
+};
 
 export default function Page() {
-  const [offers, setOffers] = useState<any[]>([]); 
+  const [offers, setOffers] = useState<Offer[]>([]);
 
   const fetchOffers = async () => {
     try {
@@ -13,15 +21,6 @@ export default function Page() {
       setOffers(res.data.data.offers || []);
     } catch (err) {
       console.error("Failed to fetch offers", err);
-    }
-  };
-
-  const deleteOffer = async (id: string) => {
-    try {
-      await axios.delete(`/api/supplier/getoffers?id=${id}`);
-      setOffers((prev) => prev.filter((offer) => offer._id !== id)); 
-    } catch (err) {
-      console.error("Failed to delete offer", err);
     }
   };
 

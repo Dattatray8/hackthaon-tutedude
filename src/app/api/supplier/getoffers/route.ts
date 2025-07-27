@@ -6,7 +6,7 @@ import { asyncHandler } from "@/utils/asyncHandler";
 const handler = asyncHandler(async () => {
   await connectDB();
 
-  const offers = await Offer.find().populate("supplier");
+  const offers = await Offer.find();
 
   return ApiResponse.success("All offers fetched successfully", { offers }, 200);
 });

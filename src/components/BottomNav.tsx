@@ -25,8 +25,8 @@ export function BottomNavVendor() {
       <BottomNavItem label="Profile" href="/profile" icon={<User className="h-5 w-5" />} />
       <BottomNavItem label="Offers" href="/offers" icon={<ShoppingCart className="h-5 w-5" />} />
       <BottomNavItem label="Suppliers" href="/suppliers" icon={<Users className="h-5 w-5" />} />
-      <Button variant="destructive" className="bg-black" size="sm" onClick={async()=>{
-        let res = await logoutUser()
+      <Button variant="destructive" className="bg-black hover:bg-[#181717cd] cursor-pointer" size="sm" onClick={async()=>{
+        const res = await logoutUser()
         console.log(res)
         setUser(null)
         if(!user){
@@ -44,8 +44,8 @@ export function BottomNavSupplier() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md flex justify-around py-2 md:hidden">
       <BottomNavItem label="Profile" href="/profile" icon={<User className="h-5 w-5" />} />
-      <Button variant="destructive" size="sm" onClick={async()=>{
-        let res = await logoutUser()
+      <Button variant="destructive" size="sm" className="bg-black hover:bg-[#181717cd] cursor-pointer" onClick={async()=>{
+        const res = await logoutUser()
         console.log(res)
         setUser(null)
         if(!user){
@@ -61,7 +61,7 @@ export function BottomNavGuest() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-md flex justify-around py-2 md:hidden">
       <BottomNavItem label="Home" href="/" icon={<Home className="h-5 w-5" />} />
-      <Button size="sm" onClick={()=>{navigation.push('/login')}}>Login</Button>
+      <Button size="sm" className="bg-black hover:bg-[#181717cd] cursor-pointer" onClick={()=>{navigation.push('/login')}}>Login</Button>
     </nav>
   );
 }
@@ -82,7 +82,7 @@ export default function ClientBottomNav() {
     return null;
   }
 
-  if (role === "vendor") return <BottomNavVendor />;`x`
+  if (role === "vendor") return <BottomNavVendor />;
   if (role === "supplier") return <BottomNavSupplier />;
   return <BottomNavGuest />;
 }

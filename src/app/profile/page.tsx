@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from "@/helpers/client/auth.client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VendorShopDetails from "@/components/vendor/VendorShopDetails";
 import { OfferCRUD } from "@/components/supplier/Offer";
@@ -11,7 +11,7 @@ import { SupplierForm } from "@/components/supplier/SupplierDetails";
 
 export default function Page() {
   const [role, setRole] = useState("");
-  const navigation = useRouter();
+//   const navigation = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {

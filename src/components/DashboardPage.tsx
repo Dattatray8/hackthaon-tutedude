@@ -5,36 +5,36 @@ import axios from "axios";
 import { IUser} from "@/models/user.model";
 import { useEffect, useState } from "react";
 
-const dummyFeed = [
-  {
-    _id: "1",
-    title: "Bulk Rice Offer",
-    category: "Food Grains",
-    description: "High quality rice available at discounted rates.",
-    supplierName: "Sharma Agro",
-    vendorName: "FreshMart",
-  },
-  {
-    _id: "2",
-    title: "Request for 1000kg Sugar",
-    category: "Groceries",
-    description: "Looking for bulk sugar suppliers for retail chain.",
-    supplierName: "SweetSupplies",
-    vendorName: "BigBazaar",
-  },
-  {
-    _id: "3",
-    title: "Vegetable Supply Needed",
-    category: "Vegetables",
-    description: "Daily supply of fresh vegetables required.",
-    supplierName: "GreenFarms",
-    vendorName: "VeggieMart",
-  },
-];
+// const dummyFeed = [
+//   {
+//     _id: "1",
+//     title: "Bulk Rice Offer",
+//     category: "Food Grains",
+//     description: "High quality rice available at discounted rates.",
+//     supplierName: "Sharma Agro",
+//     vendorName: "FreshMart",
+//   },
+//   {
+//     _id: "2",
+//     title: "Request for 1000kg Sugar",
+//     category: "Groceries",
+//     description: "Looking for bulk sugar suppliers for retail chain.",
+//     supplierName: "SweetSupplies",
+//     vendorName: "BigBazaar",
+//   },
+//   {
+//     _id: "3",
+//     title: "Vegetable Supply Needed",
+//     category: "Vegetables",
+//     description: "Daily supply of fresh vegetables required.",
+//     supplierName: "GreenFarms",
+//     vendorName: "VeggieMart",
+//   },
+// ];
 
 export default function DashboardPage() {
   const [user, setUser] = useState<IUser | null>(null);
-  const [feed] = useState(dummyFeed);
+  // const [feed] = useState(dummyFeed);
   const router = useRouter();
 
   useEffect(() => {

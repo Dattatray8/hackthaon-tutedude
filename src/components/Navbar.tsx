@@ -8,15 +8,15 @@ import { getCurrentUser, logoutUser } from "@/helpers/client/auth.client";
 import { IUser } from "@/models/user.model";
 import { useRouter } from "next/navigation";
 
-function NavItem({ label }: { label: string }) {
+function NavItem({ label, href }: { label: string, href:string }) {
+  const navigation = useRouter()
   return (
-    <span className="cursor-pointer text-sm font-medium hover:text-primary">
+    <span className="cursor-pointer text-sm font-medium hover:text-primary" onClick={()=>{navigation.push(href)}}>
       {label}
     </span>
   );
 }
 
-// ✅ Navbar for Vendor
 export function NavbarType1() {
   const [user, setUser] = useState<IUser | null>(null);
   const navigation = useRouter()
@@ -31,13 +31,13 @@ export function NavbarType1() {
       </div>
 
       <div className="flex items-center space-x-6">
-        <NavItem label="Profile" />
-        <NavItem label="Offers" />
-        <NavItem label="Suppliers" />
+        <NavItem label="Profile" href="/profile"/>
+        <NavItem label="Offers" href="/offers"/>
+        <NavItem label="Suppliers" href="/suppliers"/>
       </div>
 
-      <Button variant="destructive" onClick={async () => {
-        let res = await logoutUser()
+      <Button variant="destructive" className="bg-black hover:bg-[#181717cd] cursor-pointer" onClick={async () => {
+        const res = await logoutUser()
         console.log(res)
         setUser(null)
         if (!user) {
@@ -63,7 +63,7 @@ export function NavbarType2() {
       </div>
 
       <div className="flex items-center space-x-4">
-        <NavItem label="Profile" />
+        <NavItem label="Profile" href="/profile"/>
         <Button variant="destructive" onClick={async () => {
           const res = await logoutUser()
           console.log(res)
@@ -71,7 +71,7 @@ export function NavbarType2() {
           if (!user) {
             navigation.push('/dashboard')
           }
-        }}>Logout</Button>
+        }} className="bg-black hover:bg-[#181717cd] cursor-pointer">Logout</Button>
       </div>
     </nav>
   );

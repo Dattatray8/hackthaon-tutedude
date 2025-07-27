@@ -21,7 +21,7 @@ type Offer = {
   toDate: string;
   offerOn: string;
   notes?: string;
-  supplier?: any;
+  supplier?: object;
 };
 
 type OfferForm = {
