@@ -73,7 +73,7 @@ export default function ClientBottomNav() {
   useEffect(() => {
     const fetchUser = async () => {
       const res = await getCurrentUser();
-      setRole(res.data?.user?.role || "");
+      setRole(res.data?.role || "");
     };
     fetchUser();
   }, []);
