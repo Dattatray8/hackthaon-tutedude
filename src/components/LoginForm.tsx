@@ -14,7 +14,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { loginUser } from "@/helpers/client/auth.client";
+import { getCurrentUser, loginUser } from "@/helpers/client/auth.client";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
         // Handle error (e.g., show a notification)
         return;
       }
-
+      getCurrentUser()
       console.log("Login successful:", data);
       router.push("/dashboard")
     });
@@ -59,20 +59,6 @@ const LoginForm: React.FC = () => {
         </h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Username Field (optional) */}
-            {/* <FormField
-              control={form.control}
-              name="userName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
 
             <FormField
               control={form.control}

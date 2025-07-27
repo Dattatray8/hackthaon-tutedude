@@ -22,7 +22,7 @@ import {
   SelectItem,
 } from "./ui/select";
 import { UserRole } from "@/models/user.model";
-import { registerUser } from "@/helpers/client/auth.client";
+import { getCurrentUser, registerUser } from "@/helpers/client/auth.client";
 import { useRouter } from "next/navigation";
 
 // ✅ Zod Schema for validation
@@ -62,7 +62,7 @@ const Register: React.FC = () => {
       alert(error.message);
       return;
     }
-
+    getCurrentUser();
     if (user) {
       // Registration successful, handle navigation or show success message
       alert("Registration successful!");

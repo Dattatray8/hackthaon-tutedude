@@ -185,7 +185,7 @@ export default function SupplierForm() {
 
         {/* Submit */}
         <Button type="submit" className="w-full">
-          Log Form Data
+          Save Shop Details
         </Button>
       </form>
     </Form>

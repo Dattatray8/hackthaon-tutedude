@@ -31,3 +31,25 @@ data: { phone: string; password: string }
 }
 
 export {registerUser}
+
+async function getCurrentUser(): Promise<HelperResponse<IUser>> {
+  try {
+    const response = await axios.get<IUser>("/api/users");
+    return { data: response.data, error: null };
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "An unknown error occurred.");
+    return { data: null, error: { message } };
+  }
+}
+
+export { getCurrentUser };
+
+export async function logoutUser(): Promise<HelperResponse<null>> {
+  try {
+    await axios.get("/api/auth/logout");
+    return { data: null, error: null };
+  } catch (error: unknown) {
+    const message = getErrorMessage(error, "An unknown error occurred during logout.");
+    return { data: null, error: { message } };
+  }
+}
